@@ -130,12 +130,13 @@ function! fzf_utils#grep#interactive(bang, ...) abort
         \ 'options': [
         \   '--delimiter', ':', '--nth', '4..', '--with-nth', '1,2',
         \   '--prompt', 'Regex> ',
-        \   '--header', 'C-r (regex) | C-f (fixed) | C-w (word)',
         \   '--bind', 'ctrl-f:change-prompt(Fixed> )+reload(' . l:cmd_fixed . ' {q})',
         \   '--bind', 'ctrl-w:change-prompt(Word> )+reload(' . l:cmd_word  . ' {q})',
         \   '--bind', 'ctrl-r:change-prompt(Regex> )+reload(' . l:cmd_regex . ' {q})',
         \ ]
         \ }, 'right,70%,border-left,+{2}+4/3,~4', 'ctrl-p')
+  call extend(l:preview_opts.options, fzf_utils#legend#options(
+        \ 'C-r (regex) | C-f (fixed) | C-w (word) | C-p (toggle preview)', ['ctrl-p']))
   call fzf_utils#grep#capture_query(l:preview_opts)
 
   " Start in regex mode; '-e' keeps the query from being read as a path or flag
