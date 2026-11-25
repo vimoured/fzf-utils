@@ -19,7 +19,7 @@ function! s:init_fd() abort
   " Own name, so fzf.vim's commands are left alone.
   " https://github.com/junegunn/fzf.vim?tab=readme-ov-file#example-customizing-files-command
   command! -bang -nargs=? -complete=dir FdFiles
-        \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(fzf_utils#files#options()), <bang>0)
+        \ call fzf_utils#files#fd(<q-args>, <bang>0)
 
   " <Plug> mapping; no keys are bound here (see README)
   nnoremap <silent> <Plug>(fzf-utils-files) <Cmd>FdFiles<CR>
@@ -90,12 +90,7 @@ function! s:init_rg() abort
   "   :RgRaw!  → Fullscreen mode
   "   :RgRaw   → Normal mode (windowed)
   " https://github.com/junegunn/fzf.vim/issues/1533#issuecomment-2015075571
-  command! -bang -nargs=* RgRaw call fzf#vim#grep(
-        \ fzf_utils#grep#command() . " " . <q-args>,
-        \ fzf_utils#grep#capture_query(fzf#vim#with_preview({
-        \       'options': '--delimiter : --nth 4.. --preview-window +{2}-5,~3'
-        \       }, 'right:50%', 'ctrl-p')),
-        \ <bang>0)
+  command! -bang -nargs=* RgRaw call fzf_utils#grep#raw(<q-args>, <bang>0)
 
   " GrepScope: pick a scope of the current project (project-detect) in fzf,
   " then live grep in it. Without a project it is a plain :Grep.

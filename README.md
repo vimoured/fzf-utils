@@ -106,6 +106,29 @@ Completion uses the same settings as the shell's fzf keys:
 When a command isn't set, path completion lists what `:FdFiles` does, and
 directory completion lists its directories.
 
+### Key legends
+
+fzf.vim lists a command's keys in a footer, which fzf never wraps. Beside a
+preview the footer gets only the list's columns, so most of the keys are cut
+off. fzf-utils' pickers (`:FdFiles`, `:Grep`, `:RgRaw`) show their keys as a
+legend in its place. With `fzf-legend` on `$PATH` (from
+[roumail/dotfiles](https://github.com/roumail/dotfiles)' `shell/bin`), the
+legend is packed into as many rows as the list's width needs, and refit on
+resize and when the preview is toggled. Without it, the legend is a plain
+header.
+
+To give fzf.vim's own commands the same legend, set it in their options, by
+the command's name in `g:fzf_vim` (`gfiles-diff` is `:GFiles?`). Your own
+keys for a command go first:
+
+```vim
+let g:fzf_vim['gfiles-diff_options'] = fzf_utils#legend#fzf_vim('gfiles-diff')
+let g:fzf_vim.buffers_options = fzf_utils#legend#fzf_vim('buffers')
+let g:fzf_vim.commits_options = [
+      \ '--bind', 'alt-t:...',
+      \ ] + fzf_utils#legend#fzf_vim('commits', 'A-t (stat/patch)')
+```
+
 ### Ignored files
 
 `:FzfToggleIgnored` adds `--no-ignore` to every listing and search, including
