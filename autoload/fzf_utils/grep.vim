@@ -135,12 +135,22 @@ function! fzf_utils#grep#interactive(bang, ...) abort
         \   '--bind', 'ctrl-r:change-prompt(Regex> )+reload(' . l:cmd_regex . ' {q})',
         \ ]
         \ }, 'right,70%,border-left,+{2}+4/3,~4', 'ctrl-p')
-  call extend(l:preview_opts.options, fzf_utils#legend#options(
-        \ 'C-r (regex) | C-f (fixed) | C-w (word) | C-p (toggle preview)', ['ctrl-p']))
+  call extend(l:preview_opts.options, fzf_utils#legend#fzf_vim('rg',
+        \ 'C-r (regex) | C-f (fixed) | C-w (word)', ['ctrl-p']))
   call fzf_utils#grep#capture_query(l:preview_opts)
 
   " Start in regex mode; '-e' keeps the query from being read as a path or flag
   call fzf#vim#grep2(l:cmd_regex, l:pattern, l:preview_opts, a:bang)
+endfunction
+
+" :RgRaw: rg run once with the arguments as given; fzf filters what it found
+function! fzf_utils#grep#raw(args, bang) abort
+  let l:spec = fzf#vim#with_preview({
+        \ 'options': ['--delimiter', ':', '--nth', '4..', '--preview-window', '+{2}-5,~3'],
+        \ }, 'right:50%', 'ctrl-p')
+  call extend(l:spec.options, fzf_utils#legend#fzf_vim('rg', '', ['ctrl-p']))
+  call fzf#vim#grep(fzf_utils#grep#command() . ' ' . a:args,
+        \ fzf_utils#grep#capture_query(l:spec), a:bang)
 endfunction
 
 function! fzf_utils#grep#window(...) abort

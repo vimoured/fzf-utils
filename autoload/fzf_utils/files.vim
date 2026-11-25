@@ -18,6 +18,13 @@ function! fzf_utils#files#options() abort
   return {'source': s:fd_cmd('f')}
 endfunction
 
+" :FdFiles: fzf.vim's :Files, listing with fd, with the key legend
+function! fzf_utils#files#fd(dir, bang) abort
+  let l:spec = fzf#vim#with_preview(extend(fzf_utils#files#options(), {'options': []}))
+  call extend(l:spec.options, fzf_utils#legend#fzf_vim('files'))
+  call fzf#vim#files(a:dir, l:spec, a:bang)
+endfunction
+
 " The directories, by the same rules (for <C-x><C-d>)
 function! fzf_utils#files#dirs_command() abort
   return s:fd_cmd('d')
